@@ -32,7 +32,7 @@ export default function HomeScreen() {
 
   return (
     <ImageBackground
-      source={{ uri: imageState.item }}
+      source={imageState.item }
       resizeMode="cover"
       style={styles.background}
     >

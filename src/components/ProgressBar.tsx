@@ -15,7 +15,9 @@ export default function ProgressBar({
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.label}>{percentage}% de {year} já foi embora.</Text>
+      <Text style={styles.label}>
+        {percentage}% do ano já passou… e aí?
+      </Text>
 
       <View style={styles.track}>
         <View style={[styles.fill, { width: `${widthPercentage}%` }]} />

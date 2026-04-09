@@ -9,7 +9,7 @@ export default function GenerateButton({ onPress }: GenerateButtonProps) {
     <Pressable
       style={({ pressed }) => [
         styles.button,
-        pressed ? styles.buttonPressed : null,
+        pressed && styles.pressed,
       ]}
       onPress={onPress}
     >
@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: "center",
   },
-  buttonPressed: {
-    opacity: 0.82,
-    transform: [{ scale: 0.99 }],
+  pressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.97 }],
   },
   text: {
     color: "#111",
