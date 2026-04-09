@@ -1,50 +1,101 @@
-# Welcome to your Expo app 👋
+# 🧠 Reverse Coach App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Uma app de **motivação reversa** que mistura:
+- frases sarcásticas estilo coach reverso
+- imagens aleatórias
+- e a percentagem do ano a desaparecer
 
-## Get started
+Porque às vezes a melhor motivação é perceber que já estás atrasado 😐
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 📱 Preview
 
-2. Start the app
+> Em breve…
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## ⚙️ Tecnologias
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- React Native
+- Expo
+- TypeScript
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🚀 Funcionalidades
 
-When you're ready, run:
+- 🎲 Frases aleatórias anti-motivacionais
+- 🖼️ Imagens aleatórias de fundo
+- ⏳ Barra de progresso do ano
+- 🔄 Botão para gerar nova combinação
+
+---
+
+## 🧪 Como correr o projeto
+
+### 1. Clonar o repositório
 
 ```bash
-npm run reset-project
+git clone https://github.com/oliviorui/reverse-coach-app.git
+cd reverse-coach-app
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Instalar dependências
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3. Rodar o projeto
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx expo start
+```
 
-## Join the community
+Depois:
+- usa o app Expo Go no telemóvel
+- ou abre no browser com `npm run web`
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 📂 Estrutura do projeto
+
+```
+src/
+  components/
+  data/
+  screens/
+  utils/
+```
+
+---
+
+## 💡 Roadmap
+
+- [ ] Animações nas transições
+- [ ] Botão de compartilhar
+- [ ] Sistema de favoritos
+- [ ] Frases geradas por IA
+- [ ] Notificações diárias (motivação duvidosa)
+
+---
+
+## ⚠️ Aviso
+
+Este app é humorístico.
+
+Não substitui disciplina, terapia ou decisões de vida minimamente decentes.
+
+---
+
+## 🎯 Filosofia
+
+Este projeto existe para provar que:
+menos funcionalidade + mais personalidade = mais impacto.
+
+---
+
+## 📄 Licença
+
+MIT
