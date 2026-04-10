@@ -7,6 +7,10 @@ export type FavoriteItem = {
   createdAt: number;
 };
 
+type SaveFavoriteResult = {
+  saved: boolean;
+};
+
 const STORAGE_KEY = "reverse_coach_favorites";
 
 export async function getFavorites(): Promise<FavoriteItem[]> {
@@ -29,7 +33,9 @@ export async function getFavorites(): Promise<FavoriteItem[]> {
   }
 }
 
-export async function saveFavorite(item: FavoriteItem): Promise<void> {
+export async function saveFavorite(
+  item: FavoriteItem
+): Promise<SaveFavoriteResult> {
   try {
     const currentFavorites = await getFavorites();
 
@@ -39,12 +45,18 @@ export async function saveFavorite(item: FavoriteItem): Promise<void> {
     );
 
     if (alreadyExists) {
-      return;
+      return {
+        saved: false,
+      };
     }
 
     const updatedFavorites = [item, ...currentFavorites];
 
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFavorites));
+
+    return {
+      saved: true,
+    };
   } catch {
     throw new Error("Não foi possível guardar o favorito.");
   }

@@ -4,6 +4,7 @@ import {
   FlatList,
   ImageBackground,
   Pressable,
+  Share,
   StyleSheet,
   Text,
   View,
@@ -11,7 +12,11 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useRouter } from "expo-router";
 
-import { getFavorites, removeFavorite, type FavoriteItem } from "../utils/favorites";
+import {
+  getFavorites,
+  removeFavorite,
+  type FavoriteItem,
+} from "../utils/favorites";
 
 export default function FavoritesScreen() {
   const router = useRouter();
@@ -37,6 +42,16 @@ export default function FavoritesScreen() {
     }
   }
 
+  async function handleShare(item: FavoriteItem) {
+    try {
+      await Share.share({
+        message: `${item.quote}\n\nGuardado no coach reverso.exe`,
+      });
+    } catch {
+      Alert.alert("Erro", "Não foi possível compartilhar este favorito.");
+    }
+  }
+
   function renderItem({ item }: { item: FavoriteItem }) {
     return (
       <ImageBackground
@@ -51,6 +66,13 @@ export default function FavoritesScreen() {
           <Text style={styles.cardQuote}>{item.quote}</Text>
 
           <View style={styles.cardActions}>
+            <Pressable
+              style={styles.smallButton}
+              onPress={() => handleShare(item)}
+            >
+              <Text style={styles.smallButtonText}>Compartilhar</Text>
+            </Pressable>
+
             <Pressable
               style={styles.smallButton}
               onPress={() => handleRemove(item.id)}
@@ -177,6 +199,7 @@ const styles = StyleSheet.create({
   cardActions: {
     flexDirection: "row",
     justifyContent: "flex-end",
+    gap: 10,
   },
   smallButton: {
     backgroundColor: "rgba(255,255,255,0.18)",

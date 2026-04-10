@@ -48,12 +48,17 @@ export default function HomeScreen() {
 
   async function handleSave() {
     try {
-      await saveFavorite({
+      const result = await saveFavorite({
         id: `${Date.now()}-${quoteState.index}-${imageState.index}`,
         quote: quoteState.item,
         image: imageState.item,
         createdAt: Date.now(),
       });
+
+      if (!result.saved) {
+        Alert.alert("Já guardada", "Essa lapada já está nos favoritos.");
+        return;
+      }
 
       Alert.alert("Guardado", "Lapada salva com sucesso.");
     } catch {
