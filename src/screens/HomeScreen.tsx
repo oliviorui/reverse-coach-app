@@ -1,33 +1,37 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Alert,
   ImageBackground,
-  Share,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Sharing from "expo-sharing";
+import ViewShot from "react-native-view-shot";
 
 import QuoteCard from "../components/QuoteCard";
 import ProgressBar from "../components/ProgressBar";
 import GenerateButton from "../components/GenerateButton";
 
-import { quotes } from "../data/quotes";
-import { images } from "../data/images";
-import { getRandomItem } from "../utils/getRandomItem";
+import { quotes, type Quote } from "../data/quotes";
+import { images, type AppImage } from "../data/images";
+import {
+  getRandomItem,
+  type RandomItemResult,
+} from "../utils/getRandomItem";
 import { getYearProgress } from "../utils/getYearProgress";
 
 export default function HomeScreen() {
-  const [quoteState, setQuoteState] = useState<{
-    item: string;
-    index: number;
-  }>(() => getRandomItem(quotes));
+  const shareCardRef = useRef<ViewShot | null>(null);
 
-  const [imageState, setImageState] = useState<{
-    item: number;
-    index: number;
-  }>(() => getRandomItem(images));
+  const [quoteState, setQuoteState] = useState<RandomItemResult<Quote>>(() =>
+    getRandomItem(quotes)
+  );
+
+  const [imageState, setImageState] = useState<RandomItemResult<AppImage>>(() =>
+    getRandomItem(images)
+  );
 
   const yearProgress = getYearProgress();
 
@@ -41,10 +45,23 @@ export default function HomeScreen() {
 
   async function handleShare() {
     try {
-      const message = `${quoteState.item}\n\n${yearProgress.percentage}% do ano já passou… e aí?`;
+      const isSharingAvailable = await Sharing.isAvailableAsync();
 
-      await Share.share({
-        message,
+      if (!isSharingAvailable) {
+        Alert.alert("Erro", "A partilha não está disponível neste dispositivo.");
+        return;
+      }
+
+      const capturedUri = await shareCardRef.current?.capture?.();
+
+      if (!capturedUri) {
+        Alert.alert("Erro", "Não foi possível gerar a imagem para partilhar.");
+        return;
+      }
+
+      await Sharing.shareAsync(capturedUri, {
+        mimeType: "image/png",
+        dialogTitle: "Compartilhar lapada",
       });
     } catch {
       Alert.alert("Erro", "Não foi possível compartilhar agora.");
@@ -53,37 +70,54 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.screen}>
-      <ImageBackground
-        source={imageState.item}
-        resizeMode="cover"
-        imageStyle={styles.backgroundImage}
-        style={styles.background}
+      <ViewShot
+        ref={shareCardRef}
+        options={{
+          format: "png",
+          quality: 1,
+        }}
+        style={styles.captureWrapper}
       >
-        <View style={styles.overlay} />
+        <ImageBackground
+          source={imageState.item}
+          resizeMode="cover"
+          imageStyle={styles.backgroundImage}
+          style={styles.background}
+        >
+          <View style={styles.overlay} />
 
-        <SafeAreaView style={styles.safeArea}>
-          <View style={styles.container}>
-            <View style={styles.topBadge}>
-              <Text style={styles.topBadgeText}>coach reverso.exe</Text>
+          <SafeAreaView style={styles.safeArea}>
+            <View style={styles.captureContent}>
+              <View style={styles.topBadge}>
+                <Text style={styles.topBadgeText}>coach reverso.exe</Text>
+              </View>
+
+              <View style={styles.centerSpacer} />
+
+              <View style={styles.bottomContent}>
+                <QuoteCard quote={quoteState.item} />
+
+                <ProgressBar
+                  progress={yearProgress.progress}
+                  percentage={yearProgress.percentage}
+                  year={yearProgress.year}
+                />
+
+                <View style={styles.footerTag}>
+                  <Text style={styles.footerTagText}>coach reverso.exe</Text>
+                </View>
+              </View>
             </View>
+          </SafeAreaView>
+        </ImageBackground>
+      </ViewShot>
 
-            <View style={styles.bottomContent}>
-              <QuoteCard quote={quoteState.item} />
-
-              <ProgressBar
-                progress={yearProgress.progress}
-                percentage={yearProgress.percentage}
-                year={yearProgress.year}
-              />
-
-              <GenerateButton
-                onGenerate={handleGenerate}
-                onShare={handleShare}
-              />
-            </View>
-          </View>
-        </SafeAreaView>
-      </ImageBackground>
+      <View style={styles.buttonArea}>
+        <GenerateButton
+          onGenerate={handleGenerate}
+          onShare={handleShare}
+        />
+      </View>
     </View>
   );
 }
@@ -92,6 +126,9 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#000",
+  },
+  captureWrapper: {
+    flex: 1,
   },
   background: {
     flex: 1,
@@ -106,7 +143,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  container: {
+  captureContent: {
     flex: 1,
     justifyContent: "space-between",
     paddingHorizontal: 20,
@@ -127,7 +164,33 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     textTransform: "uppercase",
   },
+  centerSpacer: {
+    flex: 1,
+  },
   bottomContent: {
     width: "100%",
+  },
+  footerTag: {
+    alignSelf: "center",
+    marginTop: 8,
+    backgroundColor: "rgba(255,255,255,0.14)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.16)",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+  },
+  footerTagText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+  },
+  buttonArea: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 24,
+    backgroundColor: "#000",
   },
 });
