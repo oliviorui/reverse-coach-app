@@ -23,6 +23,10 @@ import {
 } from "../utils/getRandomItem";
 import { getYearProgress } from "../utils/getYearProgress";
 import { saveFavorite } from "../utils/favorites";
+import {
+  requestNotificationPermission,
+  scheduleDailyNotification,
+} from "../utils/notifications";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -95,6 +99,37 @@ export default function HomeScreen() {
     router.push("/favorites");
   }
 
+  async function handleEnableNotifications() {
+    try {
+      const hasPermission = await requestNotificationPermission();
+
+      if (!hasPermission) {
+        Alert.alert(
+          "Permissão negada",
+          "Ativa as notificações nas definições do telemóvel."
+        );
+        return;
+      }
+
+      const scheduled = await scheduleDailyNotification();
+
+      if (!scheduled) {
+        Alert.alert(
+          "Limitação do Expo Go",
+          "Notificações não funcionam aqui. Só em build real."
+        );
+        return;
+      }
+
+      Alert.alert(
+        "Ativado",
+        "Agora vais receber lapadas diárias 😈"
+      );
+    } catch {
+      Alert.alert("Erro", "Não foi possível ativar.");
+    }
+  }
+
   return (
     <View style={styles.screen}>
       <ViewShot
@@ -145,6 +180,7 @@ export default function HomeScreen() {
           onShare={handleShare}
           onSave={handleSave}
           onOpenFavorites={handleOpenFavorites}
+          onEnableNotifications={handleEnableNotifications}
         />
       </View>
     </View>

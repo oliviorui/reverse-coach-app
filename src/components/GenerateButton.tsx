@@ -5,6 +5,7 @@ type GenerateButtonProps = {
   onShare: () => void;
   onSave: () => void;
   onOpenFavorites: () => void;
+  onEnableNotifications: () => void;
 };
 
 export default function GenerateButton({
@@ -12,6 +13,7 @@ export default function GenerateButton({
   onShare,
   onSave,
   onOpenFavorites,
+  onEnableNotifications,
 }: GenerateButtonProps) {
   return (
     <View style={styles.container}>
@@ -50,14 +52,24 @@ export default function GenerateButton({
 
         <Pressable
           style={({ pressed }) => [
-            styles.primaryButton,
+            styles.secondaryButton,
             pressed ? styles.buttonPressed : null,
           ]}
-          onPress={onGenerate}
+          onPress={onEnableNotifications}
         >
-          <Text style={styles.primaryText}>Gerar outra</Text>
+          <Text style={styles.secondaryText}>Notificações</Text>
         </Pressable>
       </View>
+
+      <Pressable
+        style={({ pressed }) => [
+          styles.primaryButton,
+          pressed ? styles.buttonPressed : null,
+        ]}
+        onPress={onGenerate}
+      >
+        <Text style={styles.primaryText}>Gerar outra</Text>
+      </Pressable>
     </View>
   );
 }
@@ -73,7 +85,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   primaryButton: {
-    flex: 1,
+    width: "100%",
     backgroundColor: "#fff",
     paddingVertical: 16,
     borderRadius: 18,
