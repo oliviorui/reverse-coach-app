@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Sharing from "expo-sharing";
 import ViewShot from "react-native-view-shot";
+import { useRouter } from "expo-router";
 
 import QuoteCard from "../components/QuoteCard";
 import ProgressBar from "../components/ProgressBar";
@@ -21,8 +22,10 @@ import {
   type RandomItemResult,
 } from "../utils/getRandomItem";
 import { getYearProgress } from "../utils/getYearProgress";
+import { saveFavorite } from "../utils/favorites";
 
 export default function HomeScreen() {
+  const router = useRouter();
   const shareCardRef = useRef<ViewShot | null>(null);
 
   const [quoteState, setQuoteState] = useState<RandomItemResult<Quote>>(() =>
@@ -41,6 +44,21 @@ export default function HomeScreen() {
 
     setQuoteState(nextQuote);
     setImageState(nextImage);
+  }
+
+  async function handleSave() {
+    try {
+      await saveFavorite({
+        id: `${Date.now()}-${quoteState.index}-${imageState.index}`,
+        quote: quoteState.item,
+        image: imageState.item,
+        createdAt: Date.now(),
+      });
+
+      Alert.alert("Guardado", "Lapada salva com sucesso.");
+    } catch {
+      Alert.alert("Erro", "Não foi possível guardar a lapada.");
+    }
   }
 
   async function handleShare() {
@@ -66,6 +84,10 @@ export default function HomeScreen() {
     } catch {
       Alert.alert("Erro", "Não foi possível compartilhar agora.");
     }
+  }
+
+  function handleOpenFavorites() {
+    router.push("/favorites");
   }
 
   return (
@@ -113,7 +135,12 @@ export default function HomeScreen() {
       </ViewShot>
 
       <View style={styles.buttonArea}>
-        <GenerateButton onGenerate={handleGenerate} onShare={handleShare} />
+        <GenerateButton
+          onGenerate={handleGenerate}
+          onShare={handleShare}
+          onSave={handleSave}
+          onOpenFavorites={handleOpenFavorites}
+        />
       </View>
     </View>
   );
