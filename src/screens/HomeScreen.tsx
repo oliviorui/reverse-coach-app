@@ -113,10 +113,7 @@ export default function HomeScreen() {
       </ViewShot>
 
       <View style={styles.buttonArea}>
-        <GenerateButton
-          onGenerate={handleGenerate}
-          onShare={handleShare}
-        />
+        <GenerateButton onGenerate={handleGenerate} onShare={handleShare} />
       </View>
     </View>
   );
