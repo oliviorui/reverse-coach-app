@@ -1,38 +1,72 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type GenerateButtonProps = {
-  onPress: () => void;
+  onGenerate: () => void;
+  onShare: () => void;
 };
 
-export default function GenerateButton({ onPress }: GenerateButtonProps) {
+export default function GenerateButton({
+  onGenerate,
+  onShare,
+}: GenerateButtonProps) {
   return (
-    <Pressable
-      style={({ pressed }) => [
-        styles.button,
-        pressed && styles.pressed,
-      ]}
-      onPress={onPress}
-    >
-      <Text style={styles.text}>Gerar outra lapada</Text>
-    </Pressable>
+    <View style={styles.container}>
+      <Pressable
+        style={({ pressed }) => [
+          styles.secondaryButton,
+          pressed ? styles.buttonPressed : null,
+        ]}
+        onPress={onShare}
+      >
+        <Text style={styles.secondaryText}>Compartilhar lapada</Text>
+      </Pressable>
+
+      <Pressable
+        style={({ pressed }) => [
+          styles.primaryButton,
+          pressed ? styles.buttonPressed : null,
+        ]}
+        onPress={onGenerate}
+      >
+        <Text style={styles.primaryText}>Gerar outra lapada</Text>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
+  container: {
+    width: "100%",
+    gap: 12,
+  },
+  primaryButton: {
     width: "100%",
     backgroundColor: "#fff",
     paddingVertical: 16,
     borderRadius: 18,
     alignItems: "center",
   },
-  pressed: {
-    opacity: 0.7,
-    transform: [{ scale: 0.97 }],
+  secondaryButton: {
+    width: "100%",
+    backgroundColor: "rgba(255,255,255,0.16)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.22)",
+    paddingVertical: 16,
+    borderRadius: 18,
+    alignItems: "center",
   },
-  text: {
+  buttonPressed: {
+    opacity: 0.82,
+    transform: [{ scale: 0.99 }],
+  },
+  primaryText: {
     color: "#111",
     fontSize: 16,
     fontWeight: "900",
+  },
+  secondaryText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "800",
   },
 });

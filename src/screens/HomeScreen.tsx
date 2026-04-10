@@ -1,6 +1,8 @@
 import { useState } from "react";
 import {
+  Alert,
   ImageBackground,
+  Share,
   StyleSheet,
   Text,
   View,
@@ -30,6 +32,18 @@ export default function HomeScreen() {
     setImageState(nextImage);
   }
 
+  async function handleShare() {
+    try {
+      const message = `${quoteState.item}\n\n${yearProgress.percentage}% do ano já passou… e aí?`;
+
+      await Share.share({
+        message,
+      });
+    } catch {
+      Alert.alert("Erro", "Não foi possível compartilhar agora.");
+    }
+  }
+
   return (
     <View style={styles.screen}>
       <ImageBackground
@@ -55,7 +69,10 @@ export default function HomeScreen() {
                 year={yearProgress.year}
               />
 
-              <GenerateButton onPress={handleGenerate} />
+              <GenerateButton
+                onGenerate={handleGenerate}
+                onShare={handleShare}
+              />
             </View>
           </View>
         </SafeAreaView>
