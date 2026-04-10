@@ -1,4 +1,12 @@
-export function getRandomItem<T>(items: T[], currentIndex?: number) {
+export type RandomItemResult<T> = {
+  item: T;
+  index: number;
+};
+
+export function getRandomItem<T>(
+  items: T[],
+  currentIndex?: number
+): RandomItemResult<T> {
   if (items.length === 0) {
     throw new Error("A lista está vazia.");
   }

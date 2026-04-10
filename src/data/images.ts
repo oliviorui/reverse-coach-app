@@ -1,4 +1,6 @@
-export const images = [
+export type AppImage = number;
+
+export const images: AppImage[] = [
   require("../../assets/pack/1.jpg"),
   require("../../assets/pack/2.jpg"),
   require("../../assets/pack/3.jpg"),

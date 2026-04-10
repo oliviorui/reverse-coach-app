@@ -1,4 +1,6 @@
-export const quotes = [
+export type Quote = string;
+
+export const quotes: Quote[] = [
   "Se depender de motivação, você já perdeu.",
   "Você podia estar melhor. Mas decidiu explorar o fundo.",
   "O plano era evoluir. Mas o improviso venceu.",

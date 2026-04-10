@@ -19,8 +19,15 @@ import { getRandomItem } from "../utils/getRandomItem";
 import { getYearProgress } from "../utils/getYearProgress";
 
 export default function HomeScreen() {
-  const [quoteState, setQuoteState] = useState(() => getRandomItem(quotes));
-  const [imageState, setImageState] = useState(() => getRandomItem(images));
+  const [quoteState, setQuoteState] = useState<{
+    item: string;
+    index: number;
+  }>(() => getRandomItem(quotes));
+
+  const [imageState, setImageState] = useState<{
+    item: number;
+    index: number;
+  }>(() => getRandomItem(images));
 
   const yearProgress = getYearProgress();
 
