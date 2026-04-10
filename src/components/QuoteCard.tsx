@@ -16,14 +16,14 @@ export default function QuoteCard({ quote }: QuoteCardProps) {
 const styles = StyleSheet.create({
   card: {
     width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.55)",
+    backgroundColor: "rgba(0, 0, 0, 0.68)",
     borderRadius: 22,
     paddingVertical: 24,
     paddingHorizontal: 20,
     marginBottom: 22,
   },
   label: {
-    color: "rgba(255,255,255,0.75)",
+    color: "rgba(255,255,255,0.74)",
     fontSize: 12,
     fontWeight: "700",
     textTransform: "uppercase",
@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
   },
   quote: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "900",
     textAlign: "center",
-    lineHeight: 36,
+    lineHeight: 38,
   },
 });

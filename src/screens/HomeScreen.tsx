@@ -31,43 +31,53 @@ export default function HomeScreen() {
   }
 
   return (
-    <ImageBackground
-      source={imageState.item }
-      resizeMode="cover"
-      style={styles.background}
-    >
-      <View style={styles.overlay} />
+    <View style={styles.screen}>
+      <ImageBackground
+        source={imageState.item}
+        resizeMode="cover"
+        imageStyle={styles.backgroundImage}
+        style={styles.background}
+      >
+        <View style={styles.overlay} />
 
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
-          <View style={styles.topBadge}>
-            <Text style={styles.topBadgeText}>coach reverso.exe</Text>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.container}>
+            <View style={styles.topBadge}>
+              <Text style={styles.topBadgeText}>coach reverso.exe</Text>
+            </View>
+
+            <View style={styles.bottomContent}>
+              <QuoteCard quote={quoteState.item} />
+
+              <ProgressBar
+                progress={yearProgress.progress}
+                percentage={yearProgress.percentage}
+                year={yearProgress.year}
+              />
+
+              <GenerateButton onPress={handleGenerate} />
+            </View>
           </View>
-
-          <View style={styles.bottomContent}>
-            <QuoteCard quote={quoteState.item} />
-
-            <ProgressBar
-              progress={yearProgress.progress}
-              percentage={yearProgress.percentage}
-              year={yearProgress.year}
-            />
-
-            <GenerateButton onPress={handleGenerate} />
-          </View>
-        </View>
-      </SafeAreaView>
-    </ImageBackground>
+        </SafeAreaView>
+      </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
   background: {
     flex: 1,
   },
+  backgroundImage: {
+    opacity: 0.9,
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: "rgba(0,0,0,0.58)",
   },
   safeArea: {
     flex: 1,
@@ -81,7 +91,7 @@ const styles = StyleSheet.create({
   },
   topBadge: {
     alignSelf: "flex-start",
-    backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: "rgba(0,0,0,0.48)",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,

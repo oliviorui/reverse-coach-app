@@ -9,15 +9,12 @@ type ProgressBarProps = {
 export default function ProgressBar({
   progress,
   percentage,
-  year,
 }: ProgressBarProps) {
   const widthPercentage = Math.max(progress * 100, 2);
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.label}>
-        {percentage}% do ano já passou… e aí?
-      </Text>
+      <Text style={styles.label}>{percentage}% do ano já passou… e aí?</Text>
 
       <View style={styles.track}>
         <View style={[styles.fill, { width: `${widthPercentage}%` }]} />
