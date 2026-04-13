@@ -2,12 +2,18 @@ import { StyleSheet, Text, View } from "react-native";
 
 type QuoteCardProps = {
   quote: string;
+  isDaily?: boolean;
 };
 
-export default function QuoteCard({ quote }: QuoteCardProps) {
+export default function QuoteCard({ quote, isDaily }: QuoteCardProps) {
   return (
-    <View style={styles.card}>
-      <Text style={styles.label}>Frase do momento</Text>
+    <View style={[styles.card, isDaily && styles.dailyCard]}>
+      {isDaily && (
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>Frase do dia</Text>
+        </View>
+      )}
+
       <Text style={styles.quote}>{quote}</Text>
     </View>
   );
@@ -22,14 +28,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 22,
   },
-  label: {
-    color: "rgba(255,255,255,0.74)",
+  dailyCard: {
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.25)",
+  },
+  badge: {
+    alignSelf: "center",
+    backgroundColor: "#fff",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 999,
+    marginBottom: 14,
+  },
+  badgeText: {
+    color: "#000",
     fontSize: 12,
-    fontWeight: "700",
+    fontWeight: "900",
     textTransform: "uppercase",
-    letterSpacing: 0.8,
-    marginBottom: 12,
-    textAlign: "center",
   },
   quote: {
     color: "#fff",

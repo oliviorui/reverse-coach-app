@@ -7,6 +7,7 @@ type GenerateButtonProps = {
   onOpenFavorites: () => void;
   onEnableNotifications: () => void;
   onDaily: () => void;
+  isDaily: boolean;
 };
 
 export default function GenerateButton({
@@ -16,6 +17,7 @@ export default function GenerateButton({
   onOpenFavorites,
   onEnableNotifications,
   onDaily,
+  isDaily,
 }: GenerateButtonProps) {
   return (
     <View style={styles.container}>
@@ -47,7 +49,13 @@ export default function GenerateButton({
           <Text style={styles.secondaryText}>Notificações</Text>
         </Pressable>
 
-        <Pressable style={styles.primaryButton} onPress={onGenerate}>
+        <Pressable
+          style={[
+            styles.primaryButton,
+            isDaily ? styles.primaryButtonDisabled : null,
+          ]}
+          onPress={isDaily ? undefined : onGenerate}
+        >
           <Text style={styles.primaryText}>Gerar outra</Text>
         </Pressable>
       </View>
@@ -71,6 +79,9 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: "center",
   },
+  primaryButtonDisabled: {
+    opacity: 0.5,
+  },
   secondaryButton: {
     flex: 1,
     backgroundColor: "rgba(255,255,255,0.16)",
@@ -80,10 +91,12 @@ const styles = StyleSheet.create({
   },
   primaryText: {
     color: "#111",
+    fontSize: 16,
     fontWeight: "900",
   },
   secondaryText: {
     color: "#fff",
+    fontSize: 16,
     fontWeight: "800",
   },
 });

@@ -177,7 +177,7 @@ export default function HomeScreen() {
               <View style={styles.centerSpacer} />
 
               <View style={styles.bottomContent}>
-                <QuoteCard quote={quoteState.item} />
+                <QuoteCard quote={quoteState.item} isDaily={isDailyMode} />
 
                 <ProgressBar
                   progress={yearProgress.progress}
@@ -202,6 +202,7 @@ export default function HomeScreen() {
           onOpenFavorites={handleOpenFavorites}
           onEnableNotifications={handleEnableNotifications}
           onDaily={handleDailyMode}
+          isDaily={isDailyMode}
         />
       </View>
     </View>
