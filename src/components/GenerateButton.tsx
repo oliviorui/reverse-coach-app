@@ -10,6 +10,43 @@ type GenerateButtonProps = {
   isDaily: boolean;
 };
 
+type ActionButtonProps = {
+  label: string;
+  onPress: () => void;
+  variant?: "primary" | "secondary";
+  disabled?: boolean;
+};
+
+function ActionButton({
+  label,
+  onPress,
+  variant = "secondary",
+  disabled = false,
+}: ActionButtonProps) {
+  const isPrimary = variant === "primary";
+
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.buttonBase,
+        isPrimary ? styles.primaryButton : styles.secondaryButton,
+        pressed && !disabled ? styles.buttonPressed : null,
+        disabled ? styles.buttonDisabled : null,
+      ]}
+      onPress={disabled ? undefined : onPress}
+    >
+      <Text
+        style={[
+          styles.buttonText,
+          isPrimary ? styles.primaryText : styles.secondaryText,
+        ]}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
 export default function GenerateButton({
   onGenerate,
   onShare,
@@ -21,43 +58,38 @@ export default function GenerateButton({
 }: GenerateButtonProps) {
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
-        <Pressable style={styles.secondaryButton} onPress={onSave}>
-          <Text style={styles.secondaryText}>Guardar</Text>
-        </Pressable>
+      <View style={styles.actionsCard}>
+        <View style={styles.headerRow}>
+          <Text style={styles.sectionTitle}>Ações</Text>
+          <Text style={styles.sectionSubtitle}>
+            {isDaily ? "Modo diário ativo" : "Modo aleatório ativo"}
+          </Text>
+        </View>
 
-        <Pressable style={styles.secondaryButton} onPress={onShare}>
-          <Text style={styles.secondaryText}>Compartilhar</Text>
-        </Pressable>
-      </View>
+        <View style={styles.grid}>
+          <View style={styles.row}>
+            <ActionButton label="Guardar" onPress={onSave} />
+            <ActionButton label="Compartilhar" onPress={onShare} />
+          </View>
 
-      <View style={styles.row}>
-        <Pressable style={styles.secondaryButton} onPress={onOpenFavorites}>
-          <Text style={styles.secondaryText}>Favoritos</Text>
-        </Pressable>
+          <View style={styles.row}>
+            <ActionButton label="Favoritos" onPress={onOpenFavorites} />
+            <ActionButton label="Frase do dia" onPress={onDaily} />
+          </View>
 
-        <Pressable style={styles.secondaryButton} onPress={onDaily}>
-          <Text style={styles.secondaryText}>Frase do dia</Text>
-        </Pressable>
-      </View>
-
-      <View style={styles.row}>
-        <Pressable
-          style={styles.secondaryButton}
-          onPress={onEnableNotifications}
-        >
-          <Text style={styles.secondaryText}>Notificações</Text>
-        </Pressable>
-
-        <Pressable
-          style={[
-            styles.primaryButton,
-            isDaily ? styles.primaryButtonDisabled : null,
-          ]}
-          onPress={isDaily ? undefined : onGenerate}
-        >
-          <Text style={styles.primaryText}>Gerar outra</Text>
-        </Pressable>
+          <View style={styles.row}>
+            <ActionButton
+              label="Notificações"
+              onPress={onEnableNotifications}
+            />
+            <ActionButton
+              label={isDaily ? "Modo travado" : "Gerar outra"}
+              onPress={onGenerate}
+              variant="primary"
+              disabled={isDaily}
+            />
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -66,37 +98,71 @@ export default function GenerateButton({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    gap: 12,
+  },
+  actionsCard: {
+    width: "100%",
+    borderRadius: 26,
+    padding: 16,
+    backgroundColor: "rgba(10,10,12,0.82)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
+  },
+  headerRow: {
+    marginBottom: 14,
+    gap: 4,
+  },
+  sectionTitle: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: "900",
+    letterSpacing: -0.4,
+  },
+  sectionSubtitle: {
+    color: "rgba(255,255,255,0.6)",
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  grid: {
+    gap: 10,
   },
   row: {
     flexDirection: "row",
-    gap: 12,
+    gap: 10,
+  },
+  buttonBase: {
+    flex: 1,
+    minHeight: 56,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 14,
   },
   primaryButton: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingVertical: 16,
-    borderRadius: 18,
-    alignItems: "center",
-  },
-  primaryButtonDisabled: {
-    opacity: 0.5,
+    backgroundColor: "#ffffff",
   },
   secondaryButton: {
-    flex: 1,
-    backgroundColor: "rgba(255,255,255,0.16)",
-    paddingVertical: 16,
-    borderRadius: 18,
-    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.08)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
+  },
+  buttonPressed: {
+    opacity: 0.82,
+    transform: [{ scale: 0.985 }],
+  },
+  buttonDisabled: {
+    opacity: 0.45,
+  },
+  buttonText: {
+    fontSize: 15,
+    fontWeight: "900",
+    textAlign: "center",
+    letterSpacing: -0.2,
   },
   primaryText: {
-    color: "#111",
-    fontSize: 16,
-    fontWeight: "900",
+    color: "#111111",
   },
   secondaryText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "800",
+    color: "#ffffff",
   },
 });

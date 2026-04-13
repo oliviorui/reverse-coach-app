@@ -41,7 +41,7 @@ export default function HomeScreen() {
     getRandomItem(images)
   );
 
-  const [isDailyMode, setIsDailyMode] = useState(false);
+  const [isDailyMode, setIsDailyMode] = useState<boolean>(false);
 
   const yearProgress = getYearProgress();
 
@@ -141,10 +141,7 @@ export default function HomeScreen() {
         return;
       }
 
-      Alert.alert(
-        "Ativado",
-        "Agora vais receber lapadas diárias 😈"
-      );
+      Alert.alert("Ativado", "Agora vais receber lapadas diárias.");
     } catch {
       Alert.alert("Erro", "Não foi possível ativar.");
     }
@@ -167,16 +164,28 @@ export default function HomeScreen() {
           style={styles.background}
         >
           <View style={styles.overlay} />
+          <View style={styles.topGlow} />
+          <View style={styles.bottomShade} />
 
           <SafeAreaView style={styles.safeArea}>
             <View style={styles.captureContent}>
-              <View style={styles.topBadge}>
-                <Text style={styles.topBadgeText}>coach reverso.exe</Text>
+              <View style={styles.heroHeader}>
+                <View style={styles.brandPill}>
+                  <Text style={styles.brandPillText}>coach reverso.exe</Text>
+                </View>
+
+                <Text style={styles.heroTitle}>
+                  {isDailyMode ? "Frase do dia" : "Gerador de lapadas"}
+                </Text>
+
+                <Text style={styles.heroSubtitle}>
+                  {isDailyMode
+                    ? "Uma verdade inconveniente por dia."
+                    : "Humor ácido, caos visual e progresso existencial."}
+                </Text>
               </View>
 
-              <View style={styles.centerSpacer} />
-
-              <View style={styles.bottomContent}>
+              <View style={styles.mainContent}>
                 <QuoteCard quote={quoteState.item} isDaily={isDailyMode} />
 
                 <ProgressBar
@@ -184,17 +193,13 @@ export default function HomeScreen() {
                   percentage={yearProgress.percentage}
                   year={yearProgress.year}
                 />
-
-                <View style={styles.footerTag}>
-                  <Text style={styles.footerTagText}>coach reverso.exe</Text>
-                </View>
               </View>
             </View>
           </SafeAreaView>
         </ImageBackground>
       </ViewShot>
 
-      <View style={styles.buttonArea}>
+      <View style={styles.bottomPanel}>
         <GenerateButton
           onGenerate={handleGenerate}
           onShare={handleShare}
@@ -212,7 +217,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#050505",
   },
   captureWrapper: {
     flex: 1,
@@ -221,11 +226,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backgroundImage: {
-    opacity: 0.9,
+    opacity: 0.92,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.58)",
+    backgroundColor: "rgba(6,6,8,0.48)",
+  },
+  topGlow: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 220,
+    backgroundColor: "rgba(255,255,255,0.06)",
+  },
+  bottomShade: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 320,
+    backgroundColor: "rgba(0,0,0,0.42)",
   },
   safeArea: {
     flex: 1,
@@ -234,50 +255,51 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 24,
+    paddingTop: 10,
+    paddingBottom: 18,
   },
-  topBadge: {
+  heroHeader: {
+    gap: 10,
+    paddingTop: 6,
+  },
+  brandPill: {
     alignSelf: "flex-start",
-    backgroundColor: "rgba(0,0,0,0.48)",
+    backgroundColor: "rgba(10,10,12,0.66)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.12)",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
   },
-  topBadgeText: {
-    color: "#fff",
+  brandPillText: {
+    color: "#ffffff",
     fontSize: 12,
     fontWeight: "800",
-    letterSpacing: 0.8,
     textTransform: "uppercase",
+    letterSpacing: 0.9,
   },
-  centerSpacer: {
-    flex: 1,
+  heroTitle: {
+    color: "#ffffff",
+    fontSize: 34,
+    fontWeight: "900",
+    letterSpacing: -1,
+    lineHeight: 38,
+    maxWidth: "88%",
   },
-  bottomContent: {
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.72)",
+    fontSize: 15,
+    lineHeight: 21,
+    fontWeight: "600",
+    maxWidth: "88%",
+  },
+  mainContent: {
     width: "100%",
   },
-  footerTag: {
-    alignSelf: "center",
-    marginTop: 8,
-    backgroundColor: "rgba(255,255,255,0.14)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.16)",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 999,
-  },
-  footerTagText: {
-    color: "#fff",
-    fontSize: 12,
-    fontWeight: "800",
-    letterSpacing: 0.8,
-    textTransform: "uppercase",
-  },
-  buttonArea: {
-    paddingHorizontal: 20,
+  bottomPanel: {
+    paddingHorizontal: 16,
     paddingTop: 12,
-    paddingBottom: 24,
-    backgroundColor: "#000",
+    paddingBottom: 20,
+    backgroundColor: "#050505",
   },
 });
