@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BlurView } from "expo-blur";
+import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -18,8 +19,11 @@ type GenerateButtonProps = {
   isDaily: boolean;
 };
 
+type IconName = keyof typeof Ionicons.glyphMap;
+
 type ActionButtonProps = {
   label: string;
+  icon: IconName;
   onPress: () => void;
   variant?: "primary" | "secondary";
   disabled?: boolean;
@@ -27,6 +31,7 @@ type ActionButtonProps = {
 
 function ActionButton({
   label,
+  icon,
   onPress,
   variant = "secondary",
   disabled = false,
@@ -43,14 +48,30 @@ function ActionButton({
       ]}
       onPress={disabled ? undefined : onPress}
     >
-      <Text
-        style={[
-          styles.buttonText,
-          isPrimary ? styles.primaryText : styles.secondaryText,
-        ]}
-      >
-        {label}
-      </Text>
+      <View style={styles.buttonInner}>
+        <View
+          style={[
+            styles.iconWrap,
+            isPrimary ? styles.primaryIconWrap : styles.secondaryIconWrap,
+          ]}
+        >
+          <Ionicons
+            name={icon}
+            size={18}
+            color={isPrimary ? "#111111" : "#ffffff"}
+          />
+        </View>
+
+        <Text
+          style={[
+            styles.buttonText,
+            isPrimary ? styles.primaryText : styles.secondaryText,
+          ]}
+          numberOfLines={1}
+        >
+          {label}
+        </Text>
+      </View>
     </Pressable>
   );
 }
@@ -99,22 +120,40 @@ export default function GenerateButton({
 
           <View style={styles.grid}>
             <View style={styles.row}>
-              <ActionButton label="Guardar" onPress={onSave} />
-              <ActionButton label="Compartilhar" onPress={onShare} />
+              <ActionButton
+                label="Guardar"
+                icon="bookmark-outline"
+                onPress={onSave}
+              />
+              <ActionButton
+                label="Compartilhar"
+                icon="share-social-outline"
+                onPress={onShare}
+              />
             </View>
 
             <View style={styles.row}>
-              <ActionButton label="Favoritos" onPress={onOpenFavorites} />
-              <ActionButton label="Frase do dia" onPress={onDaily} />
+              <ActionButton
+                label="Favoritos"
+                icon="heart-outline"
+                onPress={onOpenFavorites}
+              />
+              <ActionButton
+                label="Frase do dia"
+                icon="sunny-outline"
+                onPress={onDaily}
+              />
             </View>
 
             <View style={styles.row}>
               <ActionButton
                 label="Notificações"
+                icon="notifications-outline"
                 onPress={onEnableNotifications}
               />
               <ActionButton
                 label={isDaily ? "Modo travado" : "Gerar outra"}
+                icon={isDaily ? "lock-closed-outline" : "sparkles-outline"}
                 onPress={onGenerate}
                 variant="primary"
                 disabled={isDaily}
@@ -167,12 +206,11 @@ const styles = StyleSheet.create({
   },
   buttonBase: {
     flex: 1,
-    minHeight: 56,
+    minHeight: 58,
     borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
     paddingHorizontal: 12,
-    paddingVertical: 14,
+    paddingVertical: 12,
+    justifyContent: "center",
   },
   primaryButton: {
     backgroundColor: "#ffffff",
@@ -183,16 +221,34 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.1)",
   },
   buttonPressed: {
-    opacity: 0.82,
+    opacity: 0.84,
     transform: [{ scale: 0.985 }],
   },
   buttonDisabled: {
     opacity: 0.45,
   },
+  buttonInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  iconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  primaryIconWrap: {
+    backgroundColor: "rgba(0,0,0,0.08)",
+  },
+  secondaryIconWrap: {
+    backgroundColor: "rgba(255,255,255,0.08)",
+  },
   buttonText: {
+    flex: 1,
     fontSize: 15,
     fontWeight: "900",
-    textAlign: "center",
     letterSpacing: -0.2,
   },
   primaryText: {
