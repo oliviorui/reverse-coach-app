@@ -27,6 +27,7 @@ import {
   requestNotificationPermission,
   scheduleDailyNotification,
 } from "../utils/notifications";
+import { getDailyQuote } from "../utils/getDailyQuote";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -40,14 +41,33 @@ export default function HomeScreen() {
     getRandomItem(images)
   );
 
+  const [isDailyMode, setIsDailyMode] = useState(false);
+
   const yearProgress = getYearProgress();
 
   function handleGenerate() {
+    if (isDailyMode) {
+      return;
+    }
+
     const nextQuote = getRandomItem(quotes, quoteState.index);
     const nextImage = getRandomItem(images, imageState.index);
 
     setQuoteState(nextQuote);
     setImageState(nextImage);
+  }
+
+  function handleDailyMode() {
+    const dailyQuote = getDailyQuote();
+
+    setQuoteState({
+      item: dailyQuote,
+      index: -1,
+    });
+
+    setIsDailyMode(true);
+
+    Alert.alert("Frase do dia", "Essa é a tua lapada oficial de hoje.");
   }
 
   async function handleSave() {
@@ -181,6 +201,7 @@ export default function HomeScreen() {
           onSave={handleSave}
           onOpenFavorites={handleOpenFavorites}
           onEnableNotifications={handleEnableNotifications}
+          onDaily={handleDailyMode}
         />
       </View>
     </View>

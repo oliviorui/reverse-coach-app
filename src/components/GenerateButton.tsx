@@ -6,6 +6,7 @@ type GenerateButtonProps = {
   onSave: () => void;
   onOpenFavorites: () => void;
   onEnableNotifications: () => void;
+  onDaily: () => void;
 };
 
 export default function GenerateButton({
@@ -14,62 +15,42 @@ export default function GenerateButton({
   onSave,
   onOpenFavorites,
   onEnableNotifications,
+  onDaily,
 }: GenerateButtonProps) {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Pressable
-          style={({ pressed }) => [
-            styles.secondaryButton,
-            pressed ? styles.buttonPressed : null,
-          ]}
-          onPress={onSave}
-        >
+        <Pressable style={styles.secondaryButton} onPress={onSave}>
           <Text style={styles.secondaryText}>Guardar</Text>
         </Pressable>
 
-        <Pressable
-          style={({ pressed }) => [
-            styles.secondaryButton,
-            pressed ? styles.buttonPressed : null,
-          ]}
-          onPress={onShare}
-        >
+        <Pressable style={styles.secondaryButton} onPress={onShare}>
           <Text style={styles.secondaryText}>Compartilhar</Text>
         </Pressable>
       </View>
 
       <View style={styles.row}>
-        <Pressable
-          style={({ pressed }) => [
-            styles.secondaryButton,
-            pressed ? styles.buttonPressed : null,
-          ]}
-          onPress={onOpenFavorites}
-        >
+        <Pressable style={styles.secondaryButton} onPress={onOpenFavorites}>
           <Text style={styles.secondaryText}>Favoritos</Text>
         </Pressable>
 
+        <Pressable style={styles.secondaryButton} onPress={onDaily}>
+          <Text style={styles.secondaryText}>Frase do dia</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.row}>
         <Pressable
-          style={({ pressed }) => [
-            styles.secondaryButton,
-            pressed ? styles.buttonPressed : null,
-          ]}
+          style={styles.secondaryButton}
           onPress={onEnableNotifications}
         >
           <Text style={styles.secondaryText}>Notificações</Text>
         </Pressable>
-      </View>
 
-      <Pressable
-        style={({ pressed }) => [
-          styles.primaryButton,
-          pressed ? styles.buttonPressed : null,
-        ]}
-        onPress={onGenerate}
-      >
-        <Text style={styles.primaryText}>Gerar outra</Text>
-      </Pressable>
+        <Pressable style={styles.primaryButton} onPress={onGenerate}>
+          <Text style={styles.primaryText}>Gerar outra</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -80,12 +61,11 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   row: {
-    width: "100%",
     flexDirection: "row",
     gap: 12,
   },
   primaryButton: {
-    width: "100%",
+    flex: 1,
     backgroundColor: "#fff",
     paddingVertical: 16,
     borderRadius: 18,
@@ -94,24 +74,16 @@ const styles = StyleSheet.create({
   secondaryButton: {
     flex: 1,
     backgroundColor: "rgba(255,255,255,0.16)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.22)",
     paddingVertical: 16,
     borderRadius: 18,
     alignItems: "center",
   },
-  buttonPressed: {
-    opacity: 0.82,
-    transform: [{ scale: 0.99 }],
-  },
   primaryText: {
     color: "#111",
-    fontSize: 16,
     fontWeight: "900",
   },
   secondaryText: {
     color: "#fff",
-    fontSize: 16,
     fontWeight: "800",
   },
 });
