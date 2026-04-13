@@ -1,4 +1,12 @@
+import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { BlurView } from "expo-blur";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 type ProgressBarProps = {
   progress: number;
@@ -11,34 +19,72 @@ export default function ProgressBar({
   percentage,
   year,
 }: ProgressBarProps) {
-  const widthPercentage = Math.max(progress * 100, 2);
+  const widthProgress = useSharedValue(0);
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(14);
+
+  useEffect(() => {
+    widthProgress.value = withTiming(Math.max(progress, 0.02), {
+      duration: 550,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    opacity.value = withTiming(1, {
+      duration: 320,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    translateY.value = withTiming(0, {
+      duration: 320,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [progress, opacity, translateY, widthProgress]);
+
+  const wrapperAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{ translateY: translateY.value }],
+    };
+  });
+
+  const fillAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      width: `${widthProgress.value * 100}%`,
+    };
+  });
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.header}>
-        <Text style={styles.label}>Fim de {year}</Text>
-        <Text style={styles.value}>{percentage}%</Text>
-      </View>
+    <Animated.View style={[styles.wrapper, wrapperAnimatedStyle]}>
+      <BlurView intensity={24} tint="dark" style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.label}>Fim de {year}</Text>
+          <Text style={styles.value}>{percentage}%</Text>
+        </View>
 
-      <View style={styles.track}>
-        <View style={[styles.fill, { width: `${widthPercentage}%` }]} />
-      </View>
+        <View style={styles.track}>
+          <Animated.View style={[styles.fill, fillAnimatedStyle]} />
+        </View>
 
-      <Text style={styles.caption}>O ano continua acabando. Sem emoção.</Text>
-    </View>
+        <Text style={styles.caption}>O ano continua acabando. Sem emoção.</Text>
+      </BlurView>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
+    marginBottom: 18,
+    borderRadius: 22,
+    overflow: "hidden",
+  },
+  card: {
     borderRadius: 22,
     paddingVertical: 16,
     paddingHorizontal: 16,
-    backgroundColor: "rgba(12,12,14,0.62)",
+    backgroundColor: "rgba(12,12,14,0.36)",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
-    marginBottom: 18,
   },
   header: {
     flexDirection: "row",

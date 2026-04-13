@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Alert,
   ImageBackground,
@@ -7,9 +7,16 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { BlurView } from "expo-blur";
 import * as Sharing from "expo-sharing";
 import ViewShot from "react-native-view-shot";
 import { useRouter } from "expo-router";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 import QuoteCard from "../components/QuoteCard";
 import ProgressBar from "../components/ProgressBar";
@@ -44,6 +51,22 @@ export default function HomeScreen() {
   const [isDailyMode, setIsDailyMode] = useState<boolean>(false);
 
   const yearProgress = getYearProgress();
+
+  const backgroundOpacity = useSharedValue(1);
+
+  useEffect(() => {
+    backgroundOpacity.value = 0.86;
+    backgroundOpacity.value = withTiming(1, {
+      duration: 280,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [imageState.item, backgroundOpacity]);
+
+  const backgroundAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: backgroundOpacity.value,
+    };
+  });
 
   function handleGenerate() {
     if (isDailyMode) {
@@ -157,46 +180,48 @@ export default function HomeScreen() {
         }}
         style={styles.captureWrapper}
       >
-        <ImageBackground
-          source={imageState.item}
-          resizeMode="cover"
-          imageStyle={styles.backgroundImage}
-          style={styles.background}
-        >
-          <View style={styles.overlay} />
-          <View style={styles.topGlow} />
-          <View style={styles.bottomShade} />
+        <Animated.View style={[styles.captureWrapper, backgroundAnimatedStyle]}>
+          <ImageBackground
+            source={imageState.item}
+            resizeMode="cover"
+            imageStyle={styles.backgroundImage}
+            style={styles.background}
+          >
+            <View style={styles.overlay} />
+            <View style={styles.topGlow} />
+            <View style={styles.bottomShade} />
 
-          <SafeAreaView style={styles.safeArea}>
-            <View style={styles.captureContent}>
-              <View style={styles.heroHeader}>
-                <View style={styles.brandPill}>
-                  <Text style={styles.brandPillText}>coach reverso.exe</Text>
+            <SafeAreaView style={styles.safeArea}>
+              <View style={styles.captureContent}>
+                <View style={styles.heroHeader}>
+                  <BlurView intensity={24} tint="dark" style={styles.brandPill}>
+                    <Text style={styles.brandPillText}>coach reverso.exe</Text>
+                  </BlurView>
+
+                  <Text style={styles.heroTitle}>
+                    {isDailyMode ? "Frase do dia" : "Gerador de lapadas"}
+                  </Text>
+
+                  <Text style={styles.heroSubtitle}>
+                    {isDailyMode
+                      ? "Uma verdade inconveniente por dia."
+                      : "Humor ácido, caos visual e progresso existencial."}
+                  </Text>
                 </View>
 
-                <Text style={styles.heroTitle}>
-                  {isDailyMode ? "Frase do dia" : "Gerador de lapadas"}
-                </Text>
+                <View style={styles.mainContent}>
+                  <QuoteCard quote={quoteState.item} isDaily={isDailyMode} />
 
-                <Text style={styles.heroSubtitle}>
-                  {isDailyMode
-                    ? "Uma verdade inconveniente por dia."
-                    : "Humor ácido, caos visual e progresso existencial."}
-                </Text>
+                  <ProgressBar
+                    progress={yearProgress.progress}
+                    percentage={yearProgress.percentage}
+                    year={yearProgress.year}
+                  />
+                </View>
               </View>
-
-              <View style={styles.mainContent}>
-                <QuoteCard quote={quoteState.item} isDaily={isDailyMode} />
-
-                <ProgressBar
-                  progress={yearProgress.progress}
-                  percentage={yearProgress.percentage}
-                  year={yearProgress.year}
-                />
-              </View>
-            </View>
-          </SafeAreaView>
-        </ImageBackground>
+            </SafeAreaView>
+          </ImageBackground>
+        </Animated.View>
       </ViewShot>
 
       <View style={styles.bottomPanel}>
@@ -230,7 +255,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(6,6,8,0.48)",
+    backgroundColor: "rgba(6,6,8,0.44)",
   },
   topGlow: {
     position: "absolute",
@@ -238,7 +263,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 220,
-    backgroundColor: "rgba(255,255,255,0.06)",
+    backgroundColor: "rgba(255,255,255,0.05)",
   },
   bottomShade: {
     position: "absolute",
@@ -246,7 +271,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: 320,
-    backgroundColor: "rgba(0,0,0,0.42)",
+    backgroundColor: "rgba(0,0,0,0.36)",
   },
   safeArea: {
     flex: 1,
@@ -264,12 +289,12 @@ const styles = StyleSheet.create({
   },
   brandPill: {
     alignSelf: "flex-start",
-    backgroundColor: "rgba(10,10,12,0.66)",
+    overflow: "hidden",
+    borderRadius: 999,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.12)",
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 999,
   },
   brandPillText: {
     color: "#ffffff",

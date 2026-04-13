@@ -1,4 +1,12 @@
+import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { BlurView } from "expo-blur";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 type GenerateButtonProps = {
   onGenerate: () => void;
@@ -56,42 +64,66 @@ export default function GenerateButton({
   onDaily,
   isDaily,
 }: GenerateButtonProps) {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(18);
+
+  useEffect(() => {
+    opacity.value = withTiming(1, {
+      duration: 360,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    translateY.value = withTiming(0, {
+      duration: 360,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [opacity, translateY]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{ translateY: translateY.value }],
+    };
+  });
+
   return (
-    <View style={styles.container}>
-      <View style={styles.actionsCard}>
-        <View style={styles.headerRow}>
-          <Text style={styles.sectionTitle}>Ações</Text>
-          <Text style={styles.sectionSubtitle}>
-            {isDaily ? "Modo diário ativo" : "Modo aleatório ativo"}
-          </Text>
-        </View>
-
-        <View style={styles.grid}>
-          <View style={styles.row}>
-            <ActionButton label="Guardar" onPress={onSave} />
-            <ActionButton label="Compartilhar" onPress={onShare} />
+    <Animated.View style={[styles.container, animatedStyle]}>
+      <View style={styles.wrapper}>
+        <BlurView intensity={26} tint="dark" style={styles.actionsCard}>
+          <View style={styles.headerRow}>
+            <Text style={styles.sectionTitle}>Ações</Text>
+            <Text style={styles.sectionSubtitle}>
+              {isDaily ? "Modo diário ativo" : "Modo aleatório ativo"}
+            </Text>
           </View>
 
-          <View style={styles.row}>
-            <ActionButton label="Favoritos" onPress={onOpenFavorites} />
-            <ActionButton label="Frase do dia" onPress={onDaily} />
-          </View>
+          <View style={styles.grid}>
+            <View style={styles.row}>
+              <ActionButton label="Guardar" onPress={onSave} />
+              <ActionButton label="Compartilhar" onPress={onShare} />
+            </View>
 
-          <View style={styles.row}>
-            <ActionButton
-              label="Notificações"
-              onPress={onEnableNotifications}
-            />
-            <ActionButton
-              label={isDaily ? "Modo travado" : "Gerar outra"}
-              onPress={onGenerate}
-              variant="primary"
-              disabled={isDaily}
-            />
+            <View style={styles.row}>
+              <ActionButton label="Favoritos" onPress={onOpenFavorites} />
+              <ActionButton label="Frase do dia" onPress={onDaily} />
+            </View>
+
+            <View style={styles.row}>
+              <ActionButton
+                label="Notificações"
+                onPress={onEnableNotifications}
+              />
+              <ActionButton
+                label={isDaily ? "Modo travado" : "Gerar outra"}
+                onPress={onGenerate}
+                variant="primary"
+                disabled={isDaily}
+              />
+            </View>
           </View>
-        </View>
+        </BlurView>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -99,11 +131,15 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
   },
+  wrapper: {
+    borderRadius: 26,
+    overflow: "hidden",
+  },
   actionsCard: {
     width: "100%",
     borderRadius: 26,
     padding: 16,
-    backgroundColor: "rgba(10,10,12,0.82)",
+    backgroundColor: "rgba(10,10,12,0.5)",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
   },
